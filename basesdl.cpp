@@ -109,6 +109,6 @@ void process_events(void)
 
 std::string dollar_to_sep(std::string name)
 {
-    return name.replace(name.find("$"), 1, path_sep);
+    return std::string(name).replace(name.find("$"), 1, path_sep);
 }
 

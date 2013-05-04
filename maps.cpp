@@ -1,6 +1,7 @@
 
 #include "global.h"
 #include "stdlib.h"
+#include <GL/gl.h>
 
 #include <iostream>
 #include <vector>
@@ -10,6 +11,31 @@
 #include "maps.h"
 
 const std::string dot_land(".land");
+
+GameMap::GameMap(std::string ground_id)
+:land(ground_id), ground_object(ground_id), items()
+{
+}
+
+void GameMap::try_move_to(double *x, double *y, double *z, 
+    const double delta_x, const double delta_y)
+{
+    double target_x = *x + delta_x;
+    double target_y = *y + delta_y;
+    double target_z = this->land.get_z_at(target_x, target_y);
+    double delta_z = target_z - *z;
+    if ((delta_z <= 0.7) && (delta_z >= -0.7))
+    {
+        *x = target_x;
+        *y = target_y;
+        *z = target_z;
+    }
+}
+
+double GameMap::get_initial_z(const double x, const double y)
+{
+    return this->land.get_z_at(x, y);
+}
 
 Land::Land(std::string name)
 {
@@ -23,7 +49,6 @@ Land::Land(std::string name)
     while (file.good())
     {
         file >> in;
-        SIGN_PROCESS:
         if (in == "v")
         {
             std::string sx, sy, sz;
@@ -43,12 +68,6 @@ Land::Land(std::string name)
                 this->faces.back()[n][0] = v[curr_v][0];
                 this->faces.back()[n][1] = v[curr_v][2];
                 this->faces.back()[n][2] = v[curr_v][1];
-                /**
-                this->faces.back().push_back(std::vector<double>());
-                this->faces.back().back().push_back(v[curr_v][0]);
-                this->faces.back().back().push_back(v[curr_v][2]);
-                this->faces.back().back().push_back(v[curr_v][1]);
-                **/
             }
         }
     }
@@ -72,5 +91,28 @@ double Land::get_z_at(double x, double y)
     return not_landed;
 }
 
+Item::Item(std::string name, double x, double y)
+:name(name), model(name), x(x), y(y)
+{
+}
+
+void Item::draw(GameMap *map)
+{
+    double x = this->get_x();
+    double y = this->get_y();
+    double z = map->get_z_at(x, y);
+    glTranslated(x, z, y);
+    this->model.obj_display();
+    glTranslated(-x, -z, -y);
+}
+
+void GameMap::draw_items(void)
+{
+    std::vector<Item>::iterator iter;
+    for (iter = this->items.begin(); iter != this->items.end(); iter++)
+    {
+        iter->draw(this);
+    }
+}
 
 

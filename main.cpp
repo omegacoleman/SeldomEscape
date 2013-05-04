@@ -12,7 +12,7 @@
 #include "image_loading.h"
 #include "animloader.h"
 #include "maps.h"
-#include "math.h"
+#include "creature.h"
 
 #include <string>
 #include <exception>
@@ -24,14 +24,10 @@
 
 #include "objload.h"
 
-#ifndef PI
-#   define PI 3.141592654
-#endif
 
-ModelObject *mm;
-Land *l;
+GameMap *m;
 
-Anim *running_fleur;
+Creature *fleur;
 
 GLuint texture;
 
@@ -40,9 +36,6 @@ static void draw_screen(void);
 int width = 1024;
 int height = 768;
 
-
-double x = 0.0;
-double y = 0.0;
 double r = 0.0;
 
 int main(int argc, char* argv[])
@@ -53,34 +46,38 @@ int main(int argc, char* argv[])
     load_images();
     
     texture = get_texture("sea.jpg");
-    mm = new ModelObject("maps$scpark", new MTLLibrary("maps$scpark"));
-    l = new Land("maps$scpark");
-    running_fleur = new Anim("fleur$running_000", 23, new MTLLibrary("fleur$def"));
-    running_fleur->set_starting(7);
+    m = new GameMap("maps$scpark");
+    m->add_item("maps$toilet", 12.0, 0.0);
+    fleur = new Creature("Fleur Coleman", "fleur", m);
+    fleur->add_action(ext_a_running, 23, 7);
+    // fleur->set_starting(7);
     
     while (1) {
         int tick_at_start = SDL_GetTicks();
         process_events();
         Uint8 *k = SDL_GetKeyState(NULL);
+        double m_r = r;
         if (k[SDLK_a])
         {
-            x += sin((r-90)*PI/180.0) * 0.7;
-            y -= cos((r-90)*PI/180.0) * 0.7;
+            m_r -= 90.0;
         }
         if (k[SDLK_d])
         {
-            x += sin((r+90)*PI/180.0) * 0.7;
-            y -= cos((r+90)*PI/180.0) * 0.7;
+            m_r += 90.0;
         }
         if (k[SDLK_w])
         {
-            x += sin(r*PI/180.0) * 0.7;
-            y -= cos(r*PI/180.0) * 0.7;
         }
         if (k[SDLK_s])
         {
-            x += sin((r+180)*PI/180.0) * 0.7;
-            y -= cos((r+180)*PI/180.0) * 0.7;
+            m_r += 180.0;
+        }
+        if (k[SDLK_w] or k[SDLK_a] or k[SDLK_s] or k[SDLK_d])
+        {
+            fleur->move_rotated(m_r, 0.7);
+            fleur->do_action(ext_a_running);
+        } else {
+            fleur->do_action("");
         }
         if (k[SDLK_j])
         {
@@ -118,17 +115,15 @@ static void draw_screen(void)
 
     start_gl_3d(true);
     glColor3d(1.0, 1.0, 1.0);
-    glTranslated(0.0, -5.0, -5.0);
+    glTranslated(0.0, -3.0, -10.0);
+    glRotated(15.0, 1.0, 0.0, 0.0);
     glRotated(r, 0.0, 1.0, 0.0);
-    glTranslated(-x, 0, -y);
-    mm->obj_display();
-    glTranslated(x, l->get_z_at(x, y), y);
-    glRotated(r, 0.0, -1.0, 0.0);
-    running_fleur->go_on();
+    fleur->camera_this();
+    m->draw();
+    fleur->draw();
     
     SDL_GL_SwapBuffers();
 }
-
 
 void handle_key_down(SDL_keysym* keysym)
 {

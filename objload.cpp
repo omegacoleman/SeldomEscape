@@ -19,7 +19,7 @@ const std::string dot_mtl(".mtl");
 
 ModelObject::ModelObject(std::string name)
 {
-    this->init(dollar_to_sep(name), NULL);
+    this->init(dollar_to_sep(name), new MTLLibrary(name));
 }
 
 ModelObject::ModelObject(std::string name, MTLLibrary *mlib)

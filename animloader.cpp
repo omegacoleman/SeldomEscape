@@ -8,7 +8,8 @@
 #include <iomanip>
 
 Anim::Anim(std::string basename, int frames_nr, MTLLibrary *mtllib)
-:frame_ending(frames_nr), frames(), curr_frame(0)
+:frame_ending(frames_nr), 
+    frames(), curr_frame(0), use_starting(false), returning(false)
 {
     int i;
     for (i = 1; i <= frames_nr; i++)
@@ -22,10 +23,10 @@ Anim::Anim(std::string basename, int frames_nr, MTLLibrary *mtllib)
     }
 }
 
-void Anim::go_on(void)
+bool Anim::go_on(void)
 {
     this->draw();
-    this->frame_inc();
+    return this->frame_inc();
 }
 
 void Anim::draw(void)
@@ -33,8 +34,18 @@ void Anim::draw(void)
     this->frames[this->curr_frame]->obj_display();
 }
 
-void Anim::frame_inc(void)
+bool Anim::frame_inc(void)
 {
+    if (this->returning)
+    {
+        this->curr_frame --;
+        if (this->curr_frame <= 0)
+        {
+            this->curr_frame = 0;
+            return false;
+        }
+        return true;
+    }
     this->curr_frame ++;
     if (this->use_starting)
     {
@@ -45,11 +56,18 @@ void Anim::frame_inc(void)
     } else {
         this->curr_frame %= this->frame_ending;
     }
+    return true;
 }
 
 void Anim::set_starting(int starting)
 {
     this->frame_starting_nr = starting;
     this->use_starting = true;
+}
+
+void Anim::reset(void)
+{
+    this->curr_frame = 0;
+    this->returning = false;
 }
 
