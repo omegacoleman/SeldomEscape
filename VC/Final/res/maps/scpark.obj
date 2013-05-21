@@ -1,6 +1,8 @@
 # Blender v2.66 (sub 0) OBJ File: 'scpark.blend'
 # www.blender.org
-mtllib scpark.mtl
+
+mtllib maps$scpark
+
 o Cube.001
 v 6.231009 -0.210518 2.761030
 v 6.231009 1.566246 6.231009
