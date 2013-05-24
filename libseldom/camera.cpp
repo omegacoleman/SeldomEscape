@@ -6,35 +6,9 @@
 #include <cmath>
 #include <GL/gl.h>
 
-const double rot_y_max(15.0);
-const double rot_y_min(0.0);
-const double rot_y_stepsize(1.2);
-
-const double distance_max(5.0);
-const double distance_min(3.0);
-
-const double distance_default(5.0);
-const double distance_stepsize(0.5);
-
-const double rot_z_default(0.0);
-const double rot_y_default(15.0);
-
-OffsetCamera::OffsetCamera(void)
-:rot_z(rot_z_default), rot_y(rot_y_default), distance(distance_default)
-{
-}
-
 OffsetCamera::OffsetCamera(double rot_z, double rot_y, double distance)
-:rot_z(rot_z), rot_y(rot_y), distance(distance)
+:rot_z(rot_z), rot_y(rot_y), distance(distance), target_rot_z(rot_z)
 {
-}
-
-void OffsetCamera::set_up(Creature *target)
-{
-    glTranslated(0.0, -5.0, 0.0);
-    glRotated(this->rot_y, 1.0, 0.0, 0.0);
-    glTranslated(0.0, 0.0, -this->distance);
-    glRotated(this->rot_z, 0.0, 1.0, 0.0);
 }
 
 void OffsetCamera::upper(void)
@@ -73,16 +47,29 @@ void OffsetCamera::nearer(void)
     }
 }
 
+void OffsetCamera::turn_abs(double target)
+{
+    this->target_rot_z = target;
+    while (this->target_rot_z >= 360.0)
+    {
+        this->target_rot_z -= 360.0;
+    }
+    while (this->target_rot_z < 0.0)
+    {
+        this->target_rot_z += 360.0;
+    }
+}
+
 void OffsetCamera::turn(double delta)
 {
-    this->rot_z += delta;
-    while (this->rot_z >= 360.0)
+    this->target_rot_z += delta;
+    while (this->target_rot_z >= 360.0)
     {
-        this->rot_z -= 360.0;
+        this->target_rot_z -= 360.0;
     }
-    while (this->rot_z < 0.0)
+    while (this->target_rot_z < 0.0)
     {
-        this->rot_z += 360.0;
+        this->target_rot_z += 360.0;
     }
 }
 

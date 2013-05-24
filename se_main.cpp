@@ -50,12 +50,12 @@ int main(int argc, char* argv[])
     load_images();
     
     // Init things to be displayed.
-    camera = new OffsetCamera();
-    camera->turn(90.0);
+    camera = new OffsetCamera(90.0);
     bg = get_texture("night.jpg");
     // m = new GameMap("maps$scpark");
     m = new GameMap("maps$street");
-	m->add_trigger(new DebugTrigger(3.9598, -48.7598, 8.0, walk_by));
+	m->add_trigger(new CameraTrigger<OffsetCamera>(3.9598, -48.7598, 10.0, 0.0, camera));
+	m->add_trigger(new CameraTrigger<OffsetCamera>(24.9026, -16.0620, 6.5, 180.0, camera));
     fleur = new Creature("Fleur Coleman", "fleur", m, -1.4, -19.6, 296.795);
     fleur->add_action(ext_a_running, 23, 7);
     
@@ -88,7 +88,6 @@ static void draw_screen(void)
     draw_fullscreen(bg);
     start_gl_3d(true);
     camera->set_up(fleur);
-    fleur->camera_this();
     m->draw();
     fleur->draw();
     SDL_GL_SwapBuffers();
@@ -103,6 +102,11 @@ void handle_key_down(SDL_keysym* keysym)
         case SDLK_ESCAPE:
         quit_game();
         break;
+        #ifdef __DEBUG
+        case SDLK_n:
+        camera->turn(90.0);
+        break;
+        #endif
         default:
         break;
     }
@@ -117,7 +121,7 @@ static void kb_control(Creature *curr)
 {
     Uint8 *k = SDL_GetKeyState(NULL);
     // Character.
-    double m_r = camera->get_angle();
+    double m_r = camera->get_real_angle();
     bool moving = false;
     if (k[SDLK_w])
     {
