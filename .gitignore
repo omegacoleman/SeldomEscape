@@ -2,3 +2,5 @@
 */Release/*
 */VC/*/Release/*
 *.7z
+build
+

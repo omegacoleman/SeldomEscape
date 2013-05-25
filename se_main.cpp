@@ -106,6 +106,9 @@ void handle_key_down(SDL_keysym* keysym)
         case SDLK_n:
         camera->turn(90.0);
         break;
+        case SDLK_b:
+        fleur->dump_debug();
+        break;
         #endif
         default:
         break;
@@ -178,11 +181,5 @@ static void kb_control(Creature *curr)
     {
         camera->farther();
     }
-    #ifdef __DEBUG
-    if (k[SDLK_b])
-    {
-        fleur->dump_debug();
-    }
-    #endif
 }
 

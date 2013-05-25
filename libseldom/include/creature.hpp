@@ -22,7 +22,7 @@ const std::string ext_m_def("$def");
 class Creature
 {
     public:
-    Creature::Creature(std::string name, std::string model_id, 
+    Creature(std::string name, std::string model_id, 
         GameMap *map, double x=0.0, double y=0.0, double r=0.0);
     void add_action(std::string ext, int fr_nr, int fr_start);
     void draw(void);
