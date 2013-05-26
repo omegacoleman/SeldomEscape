@@ -1,6 +1,6 @@
 
 
-SeldomEscape
+SeldomEscape [![Build Status](https://travis-ci.org/omegacoleman/SeldomEscape.png?branch=master)](https://travis-ci.org/omegacoleman/SeldomEscape)
 ============
 
 
@@ -25,13 +25,16 @@ First things first, if you haven't installed OpenGL, SDL and its
 devel packages, install them first:
 
 On ubuntu:
+``` shell
     sudo apt-get install libsdl1.2-dev libsdl-image1.2-dev
     sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
+```
 
 On fedora(Or most of other EL based linux):
+``` shell
     yum install SDL-devel SDL_image-devel
     yum install mesa-libGL-devel mesa-libGLU-devel mesa-libGLw-devel mesa-libOSMesa-devel
-    # The last one is not needed in most of situations.
+```
 
 On windows, you need to download:
 
@@ -41,11 +44,13 @@ On windows, you need to download:
 And install them to VC++
 
 Then, run these commands on linux:
+``` shell
     mkdir build
     cd build
     ln -s ../res .
     cmake ..
     make
+```
 
 On windows just run the batch file. Press enter for times.
 
