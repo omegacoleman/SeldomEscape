@@ -5,6 +5,7 @@
 #include "base_gl.hpp"
 #include "base_sdl.hpp"
 #include "load_image.hpp"
+#include "load_text.hpp"
 
 #include "maps.hpp"
 #include "creature.hpp"
@@ -48,6 +49,7 @@ int main(int argc, char* argv[])
     setup_sdl_for_gl(argc, argv);
     setup_opengl();
     load_images();
+	init_text("font.png");
     
     // Init things to be displayed.
     camera = new OffsetCamera(90.0);
@@ -90,6 +92,7 @@ static void draw_screen(void)
     camera->set_up(fleur);
     m->draw();
     fleur->draw();
+	draw_string("I must go..\n\nIt's in emergency right NOW.. right here.\n\n--But where?" ,0.0, 0.0, 0.09375);
     SDL_GL_SwapBuffers();
 }
 
@@ -163,23 +166,6 @@ static void kb_control(Creature *curr)
         curr->do_action(ext_a_running);
     } else {
         curr->do_action("");
-    }
-    // Camera.
-    if (k[SDLK_j])
-    {
-        camera->upper();
-    }
-    if (k[SDLK_l])
-    {
-        camera->lower();
-    }
-    if (k[SDLK_u])
-    {
-        camera->nearer();
-    }
-    if (k[SDLK_o])
-    {
-        camera->farther();
     }
 }
 

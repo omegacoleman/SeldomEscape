@@ -8,10 +8,10 @@ const double rot_y_max(15.0);
 const double rot_y_min(0.0);
 const double rot_y_stepsize(1.2);
 
-const double distance_max(5.0);
+const double distance_max(20.0);
 const double distance_min(3.0);
 
-const double distance_default(5.0);
+const double distance_default(7.0);
 const double distance_stepsize(0.5);
 
 const double rot_z_default(0.0);

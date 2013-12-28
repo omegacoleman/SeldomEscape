@@ -46,4 +46,6 @@ karlon_mountains.jpg
 logo_s2.jpg
 night.jpg
 sea.jpg
+font.bmp
+font.png
 
